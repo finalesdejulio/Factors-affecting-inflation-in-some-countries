@@ -1,0 +1,631 @@
+
+. 
+. *ssc install estout, replace 
+. 
+. foreach x in CPI GDPGrowth ExchangeRate UnemploymentRate PPLGrowth FDI {
+  2.         import excel "C:\Users\Nguyen Quoc Anh\Documents\Kì 2 năm 3\Kinh tế lượng\Bài cuối kì\Factors affecting inflation in some 
+> countries.xlsx", sheet(`x') firstrow clear
+  3.         sort Country
+  4.         save `x', replace
+  5. }
+(24 vars, 6 obs)
+file CPI.dta saved
+(24 vars, 6 obs)
+file GDPGrowth.dta saved
+(24 vars, 6 obs)
+file ExchangeRate.dta saved
+(24 vars, 6 obs)
+file UnemploymentRate.dta saved
+(24 vars, 6 obs)
+file PPLGrowth.dta saved
+(24 vars, 6 obs)
+file FDI.dta saved
+
+. 
+. *Noi du lieu
+. foreach x in CPI GDPGrowth ExchangeRate UnemploymentRate PPLGrowth FDI {
+  2.         use CPI, clear
+  3.         di "Dang noi voi bien `x'"
+  4.         merge 1:1 Country using `x'.dta, keep(match) nogen
+  5.         save CPI, replace
+  6. }
+Dang noi voi bien CPI
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                 6  
+    -----------------------------------------
+file CPI.dta saved
+Dang noi voi bien GDPGrowth
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                 6  
+    -----------------------------------------
+file CPI.dta saved
+Dang noi voi bien ExchangeRate
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                 6  
+    -----------------------------------------
+file CPI.dta saved
+Dang noi voi bien UnemploymentRate
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                 6  
+    -----------------------------------------
+file CPI.dta saved
+Dang noi voi bien PPLGrowth
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                 6  
+    -----------------------------------------
+file CPI.dta saved
+Dang noi voi bien FDI
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                 6  
+    -----------------------------------------
+file CPI.dta saved
+
+. 
+. *Chuyen bang thanh doc
+. use CPI, clear
+
+. reshape long CPI GDPGrowth ExchangeRate UnemploymentRate PPLGrowth FDI, i(Country) j(Year)
+(j = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22)
+(variable CPI0 not found)
+(variable GDPGrowth0 not found)
+(variable ExchangeRate0 not found)
+(variable UnemploymentRate0 not found)
+(variable PPLGrowth0 not found)
+(variable FDI0 not found)
+(variable CPI1 not found)
+(variable GDPGrowth1 not found)
+(variable ExchangeRate1 not found)
+(variable UnemploymentRate1 not found)
+(variable PPLGrowth1 not found)
+(variable FDI1 not found)
+(variable CPI2 not found)
+(variable GDPGrowth2 not found)
+(variable ExchangeRate2 not found)
+(variable UnemploymentRate2 not found)
+(variable PPLGrowth2 not found)
+(variable FDI2 not found)
+(variable CPI3 not found)
+(variable GDPGrowth3 not found)
+(variable ExchangeRate3 not found)
+(variable UnemploymentRate3 not found)
+(variable PPLGrowth3 not found)
+(variable FDI3 not found)
+(variable CPI4 not found)
+(variable GDPGrowth4 not found)
+(variable ExchangeRate4 not found)
+(variable UnemploymentRate4 not found)
+(variable PPLGrowth4 not found)
+(variable FDI4 not found)
+(variable CPI5 not found)
+(variable GDPGrowth5 not found)
+(variable ExchangeRate5 not found)
+(variable UnemploymentRate5 not found)
+(variable PPLGrowth5 not found)
+(variable FDI5 not found)
+(variable CPI6 not found)
+(variable GDPGrowth6 not found)
+(variable ExchangeRate6 not found)
+(variable UnemploymentRate6 not found)
+(variable PPLGrowth6 not found)
+(variable FDI6 not found)
+(variable CPI7 not found)
+(variable GDPGrowth7 not found)
+(variable ExchangeRate7 not found)
+(variable UnemploymentRate7 not found)
+(variable PPLGrowth7 not found)
+(variable FDI7 not found)
+(variable CPI8 not found)
+(variable GDPGrowth8 not found)
+(variable ExchangeRate8 not found)
+(variable UnemploymentRate8 not found)
+(variable PPLGrowth8 not found)
+(variable FDI8 not found)
+(variable CPI9 not found)
+(variable GDPGrowth9 not found)
+(variable ExchangeRate9 not found)
+(variable UnemploymentRate9 not found)
+(variable PPLGrowth9 not found)
+(variable FDI9 not found)
+
+Data                               Wide   ->   Long
+-----------------------------------------------------------------------------
+Number of observations                6   ->   138         
+Number of variables                 139   ->   68          
+j variable (23 values)                    ->   Year
+xij variables:
+                    CPI0 CPI1 ... CPI22   ->   CPI
+  GDPGrowth0 GDPGrowth1 ... GDPGrowth22   ->   GDPGrowth
+ExchangeRate0 ExchangeRate1 ... ExchangeRate22->ExchangeRate
+UnemploymentRate0 UnemploymentRate1 ... UnemploymentRate22->UnemploymentRate
+  PPLGrowth0 PPLGrowth1 ... PPLGrowth22   ->   PPLGrowth
+                    FDI0 FDI1 ... FDI22   ->   FDI
+-----------------------------------------------------------------------------
+
+. sort Country
+
+. egen ID = group(Country)
+
+. order Country ID CPI GDPGrowth ExchangeRate UnemploymentRate PPLGrowth FDI
+
+. xtset ID Year
+
+Panel variable: ID (strongly balanced)
+ Time variable: Year, 0 to 22
+         Delta: 1 unit
+
+. save Panel507, replace
+file Panel507.dta saved
+
+. 
+. ***Kiem tra tinh dung
+. foreach x of varlist CPI GDPGrowth UnemploymentRate PPLGrowth {
+  2.         di "Kiem tra tinh dung cua chuoi `x'"
+  3.                         xtunitroot fisher `x', dfuller lags(0)
+  4. }
+Kiem tra tinh dung cua chuoi CPI
+(60 missing values generated)
+
+Fisher-type unit-root test for CPI
+Based on augmented Dickey–Fuller tests
+--------------------------------------
+H0: All panels contain unit roots           Number of panels  =      6
+Ha: At least one panel is stationary        Number of periods =     13
+
+AR parameter: Panel-specific                Asymptotics: T -> Infinity
+Panel means:  Included
+Time trend:   Not included
+Drift term:   Not included                  ADF regressions: 0 lags
+------------------------------------------------------------------------------
+                                  Statistic      p-value
+------------------------------------------------------------------------------
+ Inverse chi-squared(12)   P        16.8297       0.1561
+ Inverse normal            Z         2.2886       0.9889
+ Inverse logit t(34)       L*        2.3609       0.9879
+ Modified inv. chi-squared Pm        0.9859       0.1621
+------------------------------------------------------------------------------
+ P statistic requires number of panels to be finite.
+ Other statistics are suitable for finite or infinite number of panels.
+------------------------------------------------------------------------------
+Kiem tra tinh dung cua chuoi GDPGrowth
+(60 missing values generated)
+
+Fisher-type unit-root test for GDPGrowth
+Based on augmented Dickey–Fuller tests
+----------------------------------------
+H0: All panels contain unit roots           Number of panels  =      6
+Ha: At least one panel is stationary        Number of periods =     13
+
+AR parameter: Panel-specific                Asymptotics: T -> Infinity
+Panel means:  Included
+Time trend:   Not included
+Drift term:   Not included                  ADF regressions: 0 lags
+------------------------------------------------------------------------------
+                                  Statistic      p-value
+------------------------------------------------------------------------------
+ Inverse chi-squared(12)   P        64.1470       0.0000
+ Inverse normal            Z        -6.0002       0.0000
+ Inverse logit t(34)       L*       -7.2813       0.0000
+ Modified inv. chi-squared Pm       10.6445       0.0000
+------------------------------------------------------------------------------
+ P statistic requires number of panels to be finite.
+ Other statistics are suitable for finite or infinite number of panels.
+------------------------------------------------------------------------------
+Kiem tra tinh dung cua chuoi UnemploymentRate
+(60 missing values generated)
+
+Fisher-type unit-root test for UnemploymentRate
+Based on augmented Dickey–Fuller tests
+-----------------------------------------------
+H0: All panels contain unit roots           Number of panels  =      6
+Ha: At least one panel is stationary        Number of periods =     13
+
+AR parameter: Panel-specific                Asymptotics: T -> Infinity
+Panel means:  Included
+Time trend:   Not included
+Drift term:   Not included                  ADF regressions: 0 lags
+------------------------------------------------------------------------------
+                                  Statistic      p-value
+------------------------------------------------------------------------------
+ Inverse chi-squared(12)   P         8.5560       0.7403
+ Inverse normal            Z         1.6485       0.9504
+ Inverse logit t(34)       L*        1.7693       0.9571
+ Modified inv. chi-squared Pm       -0.7030       0.7590
+------------------------------------------------------------------------------
+ P statistic requires number of panels to be finite.
+ Other statistics are suitable for finite or infinite number of panels.
+------------------------------------------------------------------------------
+Kiem tra tinh dung cua chuoi PPLGrowth
+(60 missing values generated)
+
+Fisher-type unit-root test for PPLGrowth
+Based on augmented Dickey–Fuller tests
+----------------------------------------
+H0: All panels contain unit roots           Number of panels  =      6
+Ha: At least one panel is stationary        Number of periods =     13
+
+AR parameter: Panel-specific                Asymptotics: T -> Infinity
+Panel means:  Included
+Time trend:   Not included
+Drift term:   Not included                  ADF regressions: 0 lags
+------------------------------------------------------------------------------
+                                  Statistic      p-value
+------------------------------------------------------------------------------
+ Inverse chi-squared(12)   P         3.3320       0.9927
+ Inverse normal            Z         2.1178       0.9829
+ Inverse logit t(29)       L*        2.3082       0.9858
+ Modified inv. chi-squared Pm       -1.7693       0.9616
+------------------------------------------------------------------------------
+ P statistic requires number of panels to be finite.
+ Other statistics are suitable for finite or infinite number of panels.
+------------------------------------------------------------------------------
+
+. //CPI ExchangeRate UnemploymentRate va PPLGrowth khong dung
+. gen dCPI = d.CPI
+(66 missing values generated)
+
+. gen dUnemploymentRate = d.UnemploymentRate
+(66 missing values generated)
+
+. gen dPPLGrowth = d.PPLGrowth
+(66 missing values generated)
+
+. 
+. drop if dCPI == .
+(66 observations deleted)
+
+. drop if dUnemploymentRate == .
+(0 observations deleted)
+
+. drop if dPPLGrowth == .
+(0 observations deleted)
+
+. 
+. ***Kiem tra lai tinh dung
+. foreach x of varlist dCPI GDPGrowth dUnemploymentRate dPPLGrowth {
+  2.         di "Kiem tra tinh dung cua chuoi `x'"
+  3.                         xtunitroot fisher `x', dfuller lags(0)
+  4. }
+Kiem tra tinh dung cua chuoi dCPI
+
+Fisher-type unit-root test for dCPI
+Based on augmented Dickey–Fuller tests
+--------------------------------------
+H0: All panels contain unit roots           Number of panels  =      6
+Ha: At least one panel is stationary        Number of periods =     12
+
+AR parameter: Panel-specific                Asymptotics: T -> Infinity
+Panel means:  Included
+Time trend:   Not included
+Drift term:   Not included                  ADF regressions: 0 lags
+------------------------------------------------------------------------------
+                                  Statistic      p-value
+------------------------------------------------------------------------------
+ Inverse chi-squared(12)   P        47.3049       0.0000
+ Inverse normal            Z        -1.7932       0.0365
+ Inverse logit t(34)       L*       -3.2673       0.0012
+ Modified inv. chi-squared Pm        7.2066       0.0000
+------------------------------------------------------------------------------
+ P statistic requires number of panels to be finite.
+ Other statistics are suitable for finite or infinite number of panels.
+------------------------------------------------------------------------------
+Kiem tra tinh dung cua chuoi GDPGrowth
+
+Fisher-type unit-root test for GDPGrowth
+Based on augmented Dickey–Fuller tests
+----------------------------------------
+H0: All panels contain unit roots           Number of panels  =      6
+Ha: At least one panel is stationary        Number of periods =     12
+
+AR parameter: Panel-specific                Asymptotics: T -> Infinity
+Panel means:  Included
+Time trend:   Not included
+Drift term:   Not included                  ADF regressions: 0 lags
+------------------------------------------------------------------------------
+                                  Statistic      p-value
+------------------------------------------------------------------------------
+ Inverse chi-squared(12)   P        56.6995       0.0000
+ Inverse normal            Z        -5.5501       0.0000
+ Inverse logit t(34)       L*       -6.4296       0.0000
+ Modified inv. chi-squared Pm        9.1242       0.0000
+------------------------------------------------------------------------------
+ P statistic requires number of panels to be finite.
+ Other statistics are suitable for finite or infinite number of panels.
+------------------------------------------------------------------------------
+Kiem tra tinh dung cua chuoi dUnemploymentRate
+
+Fisher-type unit-root test for dUnemploymentRate
+Based on augmented Dickey–Fuller tests
+------------------------------------------------
+H0: All panels contain unit roots           Number of panels  =      6
+Ha: At least one panel is stationary        Number of periods =     12
+
+AR parameter: Panel-specific                Asymptotics: T -> Infinity
+Panel means:  Included
+Time trend:   Not included
+Drift term:   Not included                  ADF regressions: 0 lags
+------------------------------------------------------------------------------
+                                  Statistic      p-value
+------------------------------------------------------------------------------
+ Inverse chi-squared(12)   P        26.7311       0.0084
+ Inverse normal            Z        -2.3494       0.0094
+ Inverse logit t(34)       L*       -2.5433       0.0079
+ Modified inv. chi-squared Pm        3.0070       0.0013
+------------------------------------------------------------------------------
+ P statistic requires number of panels to be finite.
+ Other statistics are suitable for finite or infinite number of panels.
+------------------------------------------------------------------------------
+Kiem tra tinh dung cua chuoi dPPLGrowth
+
+Fisher-type unit-root test for dPPLGrowth
+Based on augmented Dickey–Fuller tests
+-----------------------------------------
+H0: All panels contain unit roots           Number of panels  =      6
+Ha: At least one panel is stationary        Number of periods =     12
+
+AR parameter: Panel-specific                Asymptotics: T -> Infinity
+Panel means:  Included
+Time trend:   Not included
+Drift term:   Not included                  ADF regressions: 0 lags
+------------------------------------------------------------------------------
+                                  Statistic      p-value
+------------------------------------------------------------------------------
+ Inverse chi-squared(12)   P        24.7721       0.0159
+ Inverse normal            Z        -1.7797       0.0376
+ Inverse logit t(34)       L*       -1.8820       0.0342
+ Modified inv. chi-squared Pm        2.6071       0.0046
+------------------------------------------------------------------------------
+ P statistic requires number of panels to be finite.
+ Other statistics are suitable for finite or infinite number of panels.
+------------------------------------------------------------------------------
+
+. 
+. ***Su dung cac pp truyen thong OLS, FE, RE
+. 
+. ***OLS
+. eststo OLS: reg  dCPI GDPGrowth dUnemploymentRate dPPLGrowth
+
+      Source |       SS           df       MS      Number of obs   =        72
+-------------+----------------------------------   F(3, 68)        =      6.52
+       Model |  153.714168         3  51.2380561   Prob > F        =    0.0006
+    Residual |  534.627844        68  7.86217418   R-squared       =    0.2233
+-------------+----------------------------------   Adj R-squared   =    0.1890
+       Total |  688.342012        71  9.69495792   Root MSE        =     2.804
+
+-----------------------------------------------------------------------------------
+             dCPI | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+------------------+----------------------------------------------------------------
+        GDPGrowth |   .3536662   .0847173     4.17   0.000     .1846154    .5227169
+dUnemploymentRate |    .480158   .3634386     1.32   0.191    -.2450723    1.205388
+       dPPLGrowth |   2.137979   1.326789     1.61   0.112    -.5095868    4.785545
+            _cons |   1.701279   .3964629     4.29   0.000     .9101497    2.492408
+-----------------------------------------------------------------------------------
+
+. est store OLS
+
+. ovtest
+
+Ramsey RESET test for omitted variables
+Omitted: Powers of fitted values of dCPI
+
+H0: Model has no omitted variables
+
+F(3, 65) =   1.87
+Prob > F = 0.1441
+
+. vif 
+
+    Variable |       VIF       1/VIF  
+-------------+----------------------
+dUnemploym~e |      1.09    0.914024
+   GDPGrowth |      1.06    0.946955
+  dPPLGrowth |      1.04    0.963793
+-------------+----------------------
+    Mean VIF |      1.06
+
+. estat hettest
+
+Breusch–Pagan/Cook–Weisberg test for heteroskedasticity 
+Assumption: Normal error terms
+Variable: Fitted values of dCPI
+
+H0: Constant variance
+
+    chi2(1) =  15.75
+Prob > chi2 = 0.0001
+
+. //Co hien tuogn phuong sai thay doi, khac phuc bang robust
+. reg dCPI GDPGrowth dUnemploymentRate dPPLGrowth, robust
+
+Linear regression                               Number of obs     =         72
+                                                F(3, 68)          =       7.48
+                                                Prob > F          =     0.0002
+                                                R-squared         =     0.2233
+                                                Root MSE          =      2.804
+
+-----------------------------------------------------------------------------------
+                  |               Robust
+             dCPI | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+------------------+----------------------------------------------------------------
+        GDPGrowth |   .3536662   .0775136     4.56   0.000     .1989902    .5083421
+dUnemploymentRate |    .480158   .2763189     1.74   0.087    -.0712277    1.031544
+       dPPLGrowth |   2.137979   1.034185     2.07   0.043     .0742952    4.201663
+            _cons |   1.701279   .2517636     6.76   0.000     1.198893    2.203666
+-----------------------------------------------------------------------------------
+
+. 
+. ***FEM
+. eststo FE: xtreg  dCPI GDPGrowth dUnemploymentRate dPPLGrowth, fe
+
+Fixed-effects (within) regression               Number of obs     =         72
+Group variable: ID                              Number of groups  =          6
+
+R-squared:                                      Obs per group:
+     Within  = 0.0888                                         min =         12
+     Between = 0.5533                                         avg =       12.0
+     Overall = 0.2151                                         max =         12
+
+                                                F(3,63)           =       2.05
+corr(u_i, Xb) = 0.3356                          Prob > F          =     0.1163
+
+-----------------------------------------------------------------------------------
+             dCPI | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+------------------+----------------------------------------------------------------
+        GDPGrowth |    .209873   .1111284     1.89   0.064    -.0121994    .4319454
+dUnemploymentRate |   .2336086   .3663391     0.64   0.526    -.4984617    .9656788
+       dPPLGrowth |   1.949675    1.19773     1.63   0.109    -.4437965    4.343147
+            _cons |   2.039966   .4038866     5.05   0.000     1.232863    2.847069
+------------------+----------------------------------------------------------------
+          sigma_u |  1.6174856
+          sigma_e |  2.5228898
+              rho |  .29130297   (fraction of variance due to u_i)
+-----------------------------------------------------------------------------------
+F test that all u_i=0: F(5, 63) = 4.20                       Prob > F = 0.0023
+
+. est store FE
+
+. //Quan sat p-value => Lua chon mo hinh FEM thay vi OLS
+. xttest3
+
+Modified Wald test for groupwise heteroskedasticity
+in fixed effect regression model
+
+H0: sigma(i)^2 = sigma^2 for all i
+
+chi2 (6)  =      282.26
+Prob>chi2 =      0.0000
+
+
+. //Mo hinh FEM co phuong sai sai so thay doi
+. 
+. ***REM
+. eststo RE: xtreg dCPI GDPGrowth dUnemploymentRate dPPLGrowth, re
+
+Random-effects GLS regression                   Number of obs     =         72
+Group variable: ID                              Number of groups  =          6
+
+R-squared:                                      Obs per group:
+     Within  = 0.0883                                         min =         12
+     Between = 0.5505                                         avg =       12.0
+     Overall = 0.2198                                         max =         12
+
+                                                Wald chi2(3)      =       8.31
+corr(u_i, X) = 0 (assumed)                      Prob > chi2       =     0.0400
+
+-----------------------------------------------------------------------------------
+             dCPI | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+------------------+----------------------------------------------------------------
+        GDPGrowth |   .2442244    .102283     2.39   0.017     .0437535    .4446953
+dUnemploymentRate |   .2963429   .3523299     0.84   0.400     -.394211    .9868968
+       dPPLGrowth |    1.98377   1.179448     1.68   0.093    -.3279051    4.295446
+            _cons |   1.959309   .8616391     2.27   0.023     .2705277    3.648091
+------------------+----------------------------------------------------------------
+          sigma_u |  1.9135882
+          sigma_e |  2.5228898
+              rho |  .36520349   (fraction of variance due to u_i)
+-----------------------------------------------------------------------------------
+
+. est store RE
+
+. xttest0
+
+Breusch and Pagan Lagrangian multiplier test for random effects
+
+        dCPI[ID,t] = Xb + u[ID] + e[ID,t]
+
+        Estimated results:
+                         |       Var     SD = sqrt(Var)
+                ---------+-----------------------------
+                    dCPI |   9.694958       3.113673
+                       e |   6.364973        2.52289
+                       u |    3.66182       1.913588
+
+        Test: Var(u) = 0
+                             chibar2(01) =    10.12
+                          Prob > chibar2 =   0.0007
+
+. 
+. ***Lua chon FE va RE
+. hausman FE RE
+
+                 ---- Coefficients ----
+             |      (b)          (B)            (b-B)     sqrt(diag(V_b-V_B))
+             |       FE           RE         Difference       Std. err.
+-------------+----------------------------------------------------------------
+   GDPGrowth |     .209873     .2442244       -.0343514        .0434479
+dUnemploym~e |    .2336086     .2963429       -.0627344        .1003394
+  dPPLGrowth |    1.949675      1.98377       -.0340951        .2084681
+------------------------------------------------------------------------------
+                          b = Consistent under H0 and Ha; obtained from xtreg.
+           B = Inconsistent under Ha, efficient under H0; obtained from xtreg.
+
+Test of H0: Difference in coefficients not systematic
+
+    chi2(3) = (b-B)'[(V_b-V_B)^(-1)](b-B)
+            =   0.63
+Prob > chi2 = 0.8897
+
+. //Lua chon REM
+. 
+. ***Kiem dinh tu tuong quan
+. xtserial  dCPI GDPGrowth dUnemploymentRate dPPLGrowth
+
+Wooldridge test for autocorrelation in panel data
+H0: no first-order autocorrelation
+    F(  1,       5) =     41.751
+           Prob > F =      0.0013
+
+. 
+. ***dua ve gls
+. xtgls dCPI GDPGrowth dUnemploymentRate dPPLGrowth, corr(psar1) igls
+Iteration 1: tolerance = 0
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        homoskedastic
+Correlation:   panel-specific AR(1)
+
+Estimated covariances      =         1          Number of obs     =         72
+Estimated autocorrelations =         6          Number of groups  =          6
+Estimated coefficients     =         4          Time periods      =         12
+                                                Wald chi2(3)      =      23.40
+                                                Prob > chi2       =     0.0000
+
+-----------------------------------------------------------------------------------
+             dCPI | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+------------------+----------------------------------------------------------------
+        GDPGrowth |    .328954   .0823544     3.99   0.000     .1675424    .4903656
+dUnemploymentRate |   .3502282    .334095     1.05   0.295     -.304586    1.005042
+       dPPLGrowth |   2.261781   .9747913     2.32   0.020     .3512249    4.172336
+            _cons |   1.634465   .3050715     5.36   0.000     1.036536    2.232394
+-----------------------------------------------------------------------------------
+
+. 
+. 
+. 
+. 
+end of do-file
+
+. save "Panel507.dta", replace
+file Panel507.dta saved
+
+. exit, clear
